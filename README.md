@@ -31,6 +31,13 @@ while True:
         mcp2515.can_send(0x666,data[1],0)
 ```
 
+## Performance
+Repeat: Receive to Send  
+Send Can Frame: StandardID:0x777 dlc:8 byte:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00  
+|        | Micropython scripts Only | This Codes          | Performance     | 
+| ------ | ------------------------ | ------------------- | --------------- | 
+| RP2040 | 270~340 Message/s        | 1200~1400 Message/s | x4.0~4.3 faster | 
+
 # Library used
 * https://github.com/micropython/micropython  
   License: https://github.com/micropython/micropython/blob/master/LICENSE
