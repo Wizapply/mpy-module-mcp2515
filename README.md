@@ -9,7 +9,7 @@ Micropython external C module for MCP2515 (For high speed)
   https://micropython-docs-ja.readthedocs.io/ja/latest/develop/natmod.html#defining-a-native-module
 * If you are using RP2040, copy the already built output_module mpy file to your device.
 
-Example micropthon code:
+Example micropython(.py) code:
 ```python
 import mcp2515
 from machine import Pin, SPI
