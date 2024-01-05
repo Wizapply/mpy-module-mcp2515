@@ -4,6 +4,9 @@
 ## Overview
 Micropython external C module for MCP2515 (For high speed)  
 
+MCP2515 : Stand Alone CAN Controller with SPI
+https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf
+
 ## Usage
 * Micropython external module generation method  
   https://micropython-docs-ja.readthedocs.io/ja/latest/develop/natmod.html#defining-a-native-module
