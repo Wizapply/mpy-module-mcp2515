@@ -27,6 +27,9 @@ pin_cs = Pin(csPin, Pin.OUT)
 if not mcp2515.can_init(spio,pin_cs,500000):
     print('mcp2515 error.')
 
+mcp2515.can_filter(0x700,0x700,False)
+mcp2515.can_mode(mcp2515.NormalMode)
+
 while True:
     mcp2515.can_recv_poling()
     data = mcp2515.can_read()
@@ -36,7 +39,8 @@ while True:
 
 ## Performance
 Repeat: Receive to Send  
-Send Can Frame: StandardID:0x777 dlc:8 byte:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00  
+CAN Config: 500000 bps Standard Frame  
+Send Can Frame: ID:0x777 dlc:8 byte:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00  
 |        | Micropython scripts Only | This Codes          | Performance     | 
 | ------ | ------------------------ | ------------------- | --------------- | 
 | RP2040 | 270~340 Message/s        | 1200~1400 Message/s | x4.0~4.3 faster | 

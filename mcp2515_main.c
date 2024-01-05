@@ -127,6 +127,8 @@ STATIC mp_obj_t can_init(mp_obj_t spi_obj, mp_obj_t cs_pin, mp_obj_t can_baudrat
     if(MCP_setBitrate(can_baudrate_config, MCP_20MHZ) != ERROR_OK) return mp_const_false;
     if(MCP_setNormalMode() != ERROR_OK) return mp_const_false;
 
+    g_queue_tail = -1;
+
     return mp_const_true;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_3(can_init_obj, can_init);
@@ -155,14 +157,16 @@ STATIC mp_obj_t can_filter(mp_obj_t mask, mp_obj_t filter, mp_obj_t ext) {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_false;
 
-    int mask_int = mp_obj_get_int(mask);
-    int filter_int = mp_obj_get_int(filter);
-    int ext_int = mp_obj_get_int(ext);
-    if(MCP_setFilter(RXF0, ext_int, filter_int) != ERROR_OK) { 
+    uint32_t mask_int = (uint32_t)mp_obj_get_int(mask);
+    uint32_t filter_int = (uint32_t)mp_obj_get_int(filter);
+    bool ext_b = mp_obj_get_int(ext) != 0;
+    if(MCP_setFilter(RXF0, ext_b, filter_int) != ERROR_OK) { 
         return mp_const_false;
     }
-    MCP_setFilterMask(MASK0, ext_int, mask_int);
-    MCP_setFilterMask(MASK1, ext_int, mask_int);
+    MCP_setFilterMask(MASK0, ext_b, mask_int);
+    MCP_setFilterMask(MASK1, ext_b, mask_int);
+
+    MCP_setNormalMode();	//set
     return mp_const_true;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_3(can_filter_obj, can_filter);
