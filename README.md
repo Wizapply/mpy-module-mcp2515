@@ -4,7 +4,7 @@
 ## Overview
 Micropython external C module for MCP2515 (For high speed)  
 
-MCP2515 : Stand Alone CAN Controller with SPI
+MCP2515 : Stand Alone CAN Controller with SPI  
 https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf
 
 ## Usage
@@ -45,4 +45,5 @@ Send Can Frame: StandardID:0x777 dlc:8 byte:0x00,0x00,0x00,0x00,0x00,0x00,0x00,0
 * https://github.com/micropython/micropython  
   License: https://github.com/micropython/micropython/blob/master/LICENSE
 * https://github.com/MinaHBB/MCP2515  
-  License: https://github.com/MinaHBB/MCP2515/blob/master/license.md
+  License: https://github.com/MinaHBB/MCP2515/blob/master/license.md  
+  The reason I used this library is to generate native mpy using C language.
