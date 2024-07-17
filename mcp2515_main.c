@@ -193,8 +193,10 @@ static mp_obj_t can_send(mp_obj_t canid, mp_obj_t byte_data, mp_obj_t opt) {
         memcpy(canf.data, src, canf.dlc);
     }
 
-    MCP_sendMessage(&canf);
-    return mp_const_none;
+    if(MCP_sendMessage(&canf) != ERROR_OK)
+        return mp_const_false;
+
+    return mp_const_true;
 }
 static MP_DEFINE_CONST_FUN_OBJ_3(can_send_obj, can_send);
 
