@@ -111,7 +111,7 @@ void MCP_delay(uint32_t delay)
 
 //------------- MPY Functions -------------
 
-STATIC mp_obj_t can_init(mp_obj_t spi_obj, mp_obj_t cs_pin, mp_obj_t can_baudrate) {
+static mp_obj_t can_init(mp_obj_t spi_obj, mp_obj_t cs_pin, mp_obj_t can_baudrate) {
     if(!mp_obj_is_type(spi_obj, mp_SPI_ptr))
         return mp_const_false;
 
@@ -131,9 +131,9 @@ STATIC mp_obj_t can_init(mp_obj_t spi_obj, mp_obj_t cs_pin, mp_obj_t can_baudrat
 
     return mp_const_true;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_3(can_init_obj, can_init);
+static MP_DEFINE_CONST_FUN_OBJ_3(can_init_obj, can_init);
 
-STATIC mp_obj_t can_mode(mp_obj_t mode) {
+static mp_obj_t can_mode(mp_obj_t mode) {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_none;
 
@@ -151,9 +151,9 @@ STATIC mp_obj_t can_mode(mp_obj_t mode) {
     }
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(can_mode_obj, can_mode);
+static MP_DEFINE_CONST_FUN_OBJ_1(can_mode_obj, can_mode);
 
-STATIC mp_obj_t can_filter(mp_obj_t mask, mp_obj_t filter, mp_obj_t ext) {
+static mp_obj_t can_filter(mp_obj_t mask, mp_obj_t filter, mp_obj_t ext) {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_false;
 
@@ -169,9 +169,9 @@ STATIC mp_obj_t can_filter(mp_obj_t mask, mp_obj_t filter, mp_obj_t ext) {
     MCP_setNormalMode();	//set
     return mp_const_true;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_3(can_filter_obj, can_filter);
+static MP_DEFINE_CONST_FUN_OBJ_3(can_filter_obj, can_filter);
 
-STATIC mp_obj_t can_send(mp_obj_t canid, mp_obj_t byte_data, mp_obj_t opt) {
+static mp_obj_t can_send(mp_obj_t canid, mp_obj_t byte_data, mp_obj_t opt) {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_none;
 
@@ -196,9 +196,9 @@ STATIC mp_obj_t can_send(mp_obj_t canid, mp_obj_t byte_data, mp_obj_t opt) {
     MCP_sendMessage(&canf);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_3(can_send_obj, can_send);
+static MP_DEFINE_CONST_FUN_OBJ_3(can_send_obj, can_send);
 
-STATIC mp_obj_t can_read() {
+static mp_obj_t can_read() {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_none;
 
@@ -215,10 +215,10 @@ STATIC mp_obj_t can_read() {
     }
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(can_read_obj, can_read);
+static MP_DEFINE_CONST_FUN_OBJ_0(can_read_obj, can_read);
 
 //poling
-STATIC mp_obj_t can_recv_poling() {
+static mp_obj_t can_recv_poling() {
     if(mp_sv_SPI_obj == mp_const_none)
         return mp_const_none;
 
@@ -231,7 +231,7 @@ STATIC mp_obj_t can_recv_poling() {
 
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(can_recv_poling_obj, can_recv_poling);
+static MP_DEFINE_CONST_FUN_OBJ_0(can_recv_poling_obj, can_recv_poling);
 
 //Entry Point
 mp_obj_t mpy_init(mp_obj_fun_bc_t *self, size_t n_args, size_t n_kw, mp_obj_t *args) {

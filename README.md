@@ -10,13 +10,12 @@ https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Control
 ## Usage
 * Micropython external module generation method  
   https://micropython-docs-ja.readthedocs.io/latest/develop/natmod.html#defining-a-native-module
-* If you are using RP2040, copy the already built output_module mpy file to your device.  
+* Build Example
 ```
 #linux
 
 git clone https://www.github.com/micropython/micropython
 cd micropython/
-make -C mpy-cross/
 git clone https://github.com/Wizapply/mpy-module-mcp2515 mcp2515
 cd mcp2515
 make
