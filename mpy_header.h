@@ -35,6 +35,6 @@ typedef struct _machine_spi_obj_t {
 //function
 void* memset(void *s, int c, size_t n);
 
-#define MCU_DATAQUEUE_MAXNUM (50)    //Optimized for rp2040
+#define MCU_DATAQUEUE_MAXNUM (64)    //Optimized for rp2040
 
 #endif /* INC_MPY_HEADER_H_ */

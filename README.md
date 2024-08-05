@@ -24,6 +24,7 @@ make
 Example micropython(.py) code:
 ```python
 import mcp2515
+import time
 from machine import Pin, SPI
 
 sckPin = 6
@@ -40,10 +41,11 @@ mcp2515.can_filter(0x700,0x700,False)
 mcp2515.can_mode(mcp2515.NormalMode)
 
 while True:
-    mcp2515.can_recv_poling()
-    data = mcp2515.can_read()
-    if not data is None:
-        mcp2515.can_send(0x666,data[1],0)
+    while mcp2515.can_recv_poling() > 0:
+        data = mcp2515.can_read()
+        if not data is None:
+            mcp2515.can_send(0x666,data[1],0)
+    time.sleep_ms(10)
 ```
 
 ## Performance
