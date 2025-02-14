@@ -110,27 +110,35 @@ void MCP_delay(uint32_t delay)
 
 //------------- MPY Functions -------------
 
-static mp_obj_t can_init(mp_obj_t spi_obj, mp_obj_t cs_pin, mp_obj_t can_baudrate) {
-    if (!mp_obj_is_type(spi_obj, mp_SPI_ptr))
+static mp_obj_t can_init(size_t n_args, const mp_obj_t *args) {
+    if (n_args != 4)
         return mp_const_false;
 
-    if (!mp_obj_is_type(cs_pin, mp_Pin_ptr))
+    if (!mp_obj_is_type(args[0], mp_SPI_ptr))
         return mp_const_false;
 
-    mp_sv_SPI_obj = spi_obj;
-    mp_sv_Pin_cs = cs_pin;
-    MCP_CAN_SPEED can_baudrate_config = (MCP_CAN_SPEED)mp_obj_get_int(can_baudrate);
+    if (!mp_obj_is_type(args[1], mp_Pin_ptr))
+        return mp_const_false;
+
+    if(mp_obj_get_int(args[2]) > MCP_8MHZ)
+        return mp_const_false;
+
+    mp_sv_SPI_obj = args[0];
+    mp_sv_Pin_cs = args[1];
+    MCP_CAN_SPEED can_baudrate_config = (MCP_CAN_SPEED)mp_obj_get_int(args[3]);
+    MCP_CAN_CLOCK can_clock_config = (MCP_CAN_CLOCK)mp_obj_get_int(args[2]);
 
     // reset & config the MCP2515
     if (MCP_reset() != ERROR_OK) return mp_const_false;
-    if (MCP_setBitrate(can_baudrate_config, MCP_20MHZ) != ERROR_OK) return mp_const_false;
+    if (MCP_setBitrate(can_baudrate_config, can_clock_config) != ERROR_OK) return mp_const_false;
     if (MCP_setNormalMode() != ERROR_OK) return mp_const_false;
 
     g_queue_tail = -1;
 
     return mp_const_true;
 }
-static MP_DEFINE_CONST_FUN_OBJ_3(can_init_obj, can_init);
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(can_init_obj, 4,4, can_init);
+
 
 static mp_obj_t can_mode(mp_obj_t mode) {
     if (mp_sv_SPI_obj == mp_const_none)
@@ -274,6 +282,10 @@ mp_obj_t mpy_init(mp_obj_fun_bc_t* self, size_t n_args, size_t n_kw, mp_obj_t* a
     mp_store_global(MP_QSTR_ListenMode, mp_obj_new_int(1));
     mp_store_global(MP_QSTR_LoopbackMode, mp_obj_new_int(2));
     mp_store_global(MP_QSTR_SleepMode, mp_obj_new_int(3));
+
+    mp_store_global(MP_QSTR_MCP20MHz, mp_obj_new_int(0));
+    mp_store_global(MP_QSTR_MCP16MHz, mp_obj_new_int(1));
+    mp_store_global(MP_QSTR_MCP8MHz, mp_obj_new_int(2));
 
     mp_store_global(MP_QSTR_OptExtFrame, mp_obj_new_int(0x80000000UL));
     mp_store_global(MP_QSTR_OptRemoteReq, mp_obj_new_int(0x40000000UL));
