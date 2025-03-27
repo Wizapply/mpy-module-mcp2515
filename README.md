@@ -86,7 +86,7 @@ Initialize mcp2515.
 
 ### can_read()
 *return
- dataList
+ dataList = (can_id:int, data:byte_array(), opt:int)
 
 # Library used
 * https://github.com/micropython/micropython  
