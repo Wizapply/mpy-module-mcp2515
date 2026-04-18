@@ -110,7 +110,7 @@ mcp2515.can_mode(mcp2515.NormalMode)
 
 # --- Main loop: receive, then echo back ---
 while True:
-    while mcp2515.can_recv_poling() > 0:
+    while mcp2515.can_recv_polling() > 0:
         frame = mcp2515.can_read()
         if frame is not None:
             # frame = (can_id, data_bytes, option)
