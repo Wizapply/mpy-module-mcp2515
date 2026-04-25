@@ -361,16 +361,6 @@ uint8_t   MCP_errorCountRX(void);
 uint8_t   MCP_errorCountTX(void);
 
 /**
- * @brief Reads the error count for transmit errors from the device.
- *
- * This function reads the transmit error count register of the device
- * to obtain information about the number of errors in transmitted messages.
- *
- * @return uint8_t The error count for transmit errors.
- */
-uint8_t   MCP_errorCountTX(void);
-
-/**
  * @brief Reads a CAN message from one of the buffers (RXB0 or RXB1).
  *
  * This function reads a CAN message from the device.
