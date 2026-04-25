@@ -114,6 +114,11 @@ typedef enum MCP2515_EFLG
     EFLG_EWARN  = (1<<0)
 } MCP2515_EFLG;
 
+enum STAT
+{
+    STAT_RX0IF = (1 << 0),
+    STAT_RX1IF = (1 << 1)
+};
 
 /**
  * @brief Gets the status from the device.
@@ -354,5 +359,19 @@ uint8_t   MCP_errorCountRX(void);
  * @return uint8_t The error count for transmit errors.
  */
 uint8_t   MCP_errorCountTX(void);
+
+/**
+ * @brief Reads a CAN message from one of the buffers (RXB0 or RXB1).
+ *
+ * This function reads a CAN message from the device.
+ *
+ * @param rxbn Which buffer to read (RXB0 or RXB1).
+ * @param frame Pointer to the structure where the received CAN frame
+ * will be stored.
+ * @return MCP_ERROR An error code indicating the success or failure
+ * of reading the CAN message.
+ */
+MCP_ERROR MCP_readData(const MCP_RXBn rxbn, canFrame *frame);
+
 
 #endif /* INC_MCP2515_H_ */
