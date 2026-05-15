@@ -56,12 +56,6 @@ static const uint8_t MCP_EID0 = 3;
 static const uint8_t MCP_DLC  = 4;
 static const uint8_t MCP_DATA = 5;
 
-enum STAT
-{
-    STAT_RX0IF = (1<<0),
-    STAT_RX1IF = (1<<1)
-};
-
 static const uint8_t STAT_RXIF_MASK = STAT_RX0IF | STAT_RX1IF;
 
 enum TXBnCTRL
@@ -632,8 +626,7 @@ MCP_ERROR MCP_sendMessage(const canFrame *frame)
     return ERROR_ALLTXBUSY;
 }
 
-
-static MCP_ERROR MCP_readData(const MCP_RXBn rxbn, canFrame *frame)
+MCP_ERROR MCP_readData(const MCP_RXBn rxbn, canFrame *frame)
 {
     const struct RXBn_REGS *rxb = &RXB[rxbn];
 

@@ -34,28 +34,35 @@ mp_obj_t mp_sv_Pin_cs;
 mp_obj_t mp_sv_SPI_obj;
 
 // data
-canFrame g_queue_data[MCU_DATAQUEUE_MAXNUM];
-int g_queue_tail;
+canFrame g_fifo_data[MCU_FIFO_SIZE];
+int g_fifo_head;
+int g_fifo_tail;
 
-//-------queue-------
+//------- FIFO -------
 
-bool pop(canFrame *ref)
+bool get(canFrame *ref)
 {
-    if (g_queue_tail < 0)
+    if (g_fifo_head == g_fifo_tail)
+    {
         return false;
+    }
 
-    *ref = g_queue_data[g_queue_tail];
-    g_queue_tail--;
+    g_fifo_head = (g_fifo_head + 1) % MCU_FIFO_SIZE;
+    *ref = g_fifo_data[g_fifo_head];
     return true;
 }
 
-bool push(canFrame *ref)
+bool put(canFrame *ref)
 {
-    if (g_queue_tail >= MCU_DATAQUEUE_MAXNUM - 1)
-        return false;
+    int next = (g_fifo_tail + 1) % MCU_FIFO_SIZE;
 
-    g_queue_tail++;
-    g_queue_data[g_queue_tail] = *ref;
+    if (next == g_fifo_head)
+    {
+        return false;
+    }
+
+    g_fifo_tail = next;
+    g_fifo_data[g_fifo_tail] = *ref;
 
     return true;
 }
@@ -134,7 +141,8 @@ static mp_obj_t can_init(size_t n_args, const mp_obj_t *args)
     if (MCP_setNormalMode() != ERROR_OK)
         return mp_const_false;
 
-    g_queue_tail = -1;
+    g_fifo_head = 0;
+    g_fifo_tail = 0;
 
     return mp_const_true;
 }
@@ -244,7 +252,7 @@ static mp_obj_t can_read()
         return mp_const_none;
 
     canFrame frame;
-    if (pop(&frame))
+    if (get(&frame))
     {
         mp_obj_t tuple[3];
         if (frame.id & CAN_EFF_FLAG)
@@ -262,20 +270,30 @@ static MP_DEFINE_CONST_FUN_OBJ_0(can_read_obj, can_read);
 // polling
 static mp_obj_t can_recv_polling()
 {
+    canFrame frame = {0};
+
     if (mp_sv_SPI_obj == mp_const_none)
         return mp_const_none;
 
-    canFrame frame = {0};
-    while (MCP_checkReceive())
+    uint8_t stat = MCP_getStatus();
+
+    if (stat & STAT_RX0IF)
     {
-        if (MCP_readMessage(&frame) == ERROR_OK)
+        if (MCP_readData(RXB0, &frame) == ERROR_OK)
         {
-            if (!push(&frame))
-                break;
+            put(&frame);
         }
     }
 
-    return mp_obj_new_int(g_queue_tail + 1);
+    if (stat & STAT_RX1IF)
+    {
+        if (MCP_readData(RXB1, &frame) == ERROR_OK)
+        {
+            put(&frame);
+        }
+    }
+
+    return mp_obj_new_int((g_fifo_tail - g_fifo_head) % MCU_FIFO_SIZE);
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(can_recv_polling_obj, can_recv_polling);
 
@@ -332,7 +350,8 @@ mp_obj_t mpy_init(mp_obj_fun_bc_t *self, size_t n_args, size_t n_kw, mp_obj_t *a
 
     mp_sv_Pin_cs = mp_const_none;
     mp_sv_SPI_obj = mp_const_none;
-    g_queue_tail = -1;
+    g_fifo_tail = 0;
+    g_fifo_head = 0;
 
     // This must be last, it restores the globals dict
     MP_DYNRUNTIME_INIT_EXIT
